@@ -45,3 +45,4 @@ postgres/backups
 # vercel
 .vercel
 
+.pnpm-store/

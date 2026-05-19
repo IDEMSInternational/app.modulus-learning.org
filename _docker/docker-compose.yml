@@ -1,0 +1,53 @@
+name: modulus
+services:
+  gradebook:
+    build:
+      args:
+        APP_VOLUME: /app/storage
+        IMAGE_VOLUME: /app/apps/next/.next/cache/images
+        VERSION: "0.1.0"
+      context: ..
+      dockerfile: _docker/gradebook/production/Dockerfile
+    image: modulus-gradebook:dev
+    env_file: ../apps/gradebook/.env
+    ports:
+      - "3000:8000"
+    environment:
+      POSTGRES_CONNECTION_STRING: postgres://modulus:modulus@postgres:5432/modulus_dev
+
+  demo:
+    build:
+      args:
+        VERSION: "0.1.0"
+      context: ..
+      dockerfile: _docker/agent-demo/production/Dockerfile
+    image: modulus-agent-demo:dev
+    ports:
+      - "8000:8000"
+
+  postgres:
+    environment:
+      POSTGRES_DB: modulus_dev
+      POSTGRES_PASSWORD: modulus
+      POSTGRES_USER: modulus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: "10s"
+      timeout: "5s"
+    image: postgres:18-alpine
+    volumes:
+      - postgres:/var/lib/postgresql
+
+  mail:
+    image: axllent/mailpit:v1.29
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "yes"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "yes"
+    ports:
+      - "8025:8025"
+
+
+volumes:
+  postgres:
+    driver: local
+
