@@ -143,6 +143,7 @@ COPY --from=build --chown=nginx:nginx /app/apps/gradebook/.next/standalone/apps/
 COPY --from=build --chown=nginx:nginx /app/apps/gradebook/.next/static /app/apps/gradebook/.next/static
 COPY --from=build --chown=nginx:nginx /app/apps/gradebook/public /app/apps/gradebook/public
 COPY --from=build --chown=nginx:nginx /app/apps/gradebook/email-templates /app/apps/gradebook/email-templates
+COPY --from=build --chown=nginx:nginx /app/apps/gradebook/src/content /app/apps/gradebook/src/content
 
 # Root package.json and files
 COPY --from=build /app/package.json /app/package.json
