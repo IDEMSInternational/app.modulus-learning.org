@@ -11,7 +11,7 @@ import { Breadcrumbs } from '@/ui/components/breadcrumbs'
 import { GradientGlow } from '@/ui/components/gradient'
 import type { Locale } from '@/i18n/i18n-config'
 
-export const dynamicParams = false
+export const dynamicParams = true
 export const revalidate = 60
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
