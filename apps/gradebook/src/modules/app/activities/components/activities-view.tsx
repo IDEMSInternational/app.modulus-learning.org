@@ -110,7 +110,7 @@ function padRows(value: number) {
       key={`empty-row-${
         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         index
-        }`}
+      }`}
       className="h-[32px] border-none"
     >
       &nbsp;

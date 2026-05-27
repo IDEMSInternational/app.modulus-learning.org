@@ -4,28 +4,19 @@
   "tasks": {
     "build": {
       "cache": false,
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        "build/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**"]
     },
     "dev": {
       "cache": false,
       "outputs": [],
-      "env": [
-        "NODE_ENV"
-      ],
+      "env": ["NODE_ENV"],
       "persistent": true
     },
     "devlti": {
       "cache": false,
       "outputs": [],
-      "env": [
-        "NODE_ENV"
-      ],
+      "env": ["NODE_ENV"],
       "persistent": true
     },
     "devturbo": {
@@ -43,16 +34,16 @@
       "outputs": []
     },
     "typecheck": {
-      "outputs": []
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"]
     },
     "test": {
       "outputs": []
     },
     "start": {
       "cache": false,
-      "dependsOn": [
-        "^start"
-      ]
+      "dependsOn": ["^start"]
     }
   },
   "globalEnv": [

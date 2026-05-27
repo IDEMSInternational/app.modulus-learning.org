@@ -1,11 +1,12 @@
 import { headers } from 'next/headers'
+
 import type { Viewport } from 'next'
 
 import { getTranslations } from '@/i18n/server'
-import { getAdminSession } from '@/modules/admin/session/storage'
 import { AdminSessionProvider } from '@/modules/admin/session/provider'
-import { DocumentRoot } from '../root'
+import { getAdminSession } from '@/modules/admin/session/storage'
 import { Providers } from '../providers'
+import { DocumentRoot } from '../root'
 import type { Locale } from '@/i18n/i18n-config'
 
 export async function generateViewport(): Promise<Viewport> {

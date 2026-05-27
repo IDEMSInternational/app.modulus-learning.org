@@ -17,7 +17,7 @@ jobs:
       repository-projects: write
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # This makes the context of this action to be the merge commit itself
           # instead of the HEAD of the branch.
@@ -26,12 +26,12 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 22.x
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Install Dependencies
         run: pnpm install
@@ -56,7 +56,7 @@ jobs:
           # 3. Give it "Read and Write" permissions for the specific `@modulus-learning` package.
           # 4. Add it to your GitHub repository secrets as NPM_TOKEN
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        
+
       # ===================================================================
       # ====== 🚀 NEW STEPS TO ZIP AND UPLOAD YOUR PACKAGE ARTIFACT ======
       # ===================================================================
@@ -68,7 +68,7 @@ jobs:
         run: |
           # ❗️ IMPORTANT: Replace 'packages/your-app' with the path to your package.
           PACKAGE_JSON_PATH="apps/agent/package.json"
-          
+
           PACKAGE_NAME=$(jq -r .name "$PACKAGE_JSON_PATH")
           PACKAGE_VERSION=$(jq -r .version "$PACKAGE_JSON_PATH")
 
@@ -78,10 +78,10 @@ jobs:
 
           # The tag name should still use the original scoped name
           echo "tag_name=$PACKAGE_NAME@$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-          
+
           # The zip name now uses the sanitized version
           echo "zip_name=$FILENAME_SAFE_NAME-v$PACKAGE_VERSION.zip" >> $GITHUB_OUTPUT
-          
+
           echo "dist_path=apps/agent/dist" >> $GITHUB_OUTPUT
 
       - name: Create Zip Archive
@@ -89,7 +89,7 @@ jobs:
         run: |
           cd ${{ steps.package-info.outputs.dist_path }}
           zip -r ../../../${{ steps.package-info.outputs.zip_name }} .
-      
+
       - name: Upload Zip to Release
         if: steps.changesets.outputs.published == 'true'
         env:

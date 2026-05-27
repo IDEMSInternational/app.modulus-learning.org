@@ -18,9 +18,12 @@
   "module": "./dist/core/index.js",
   "main": "./dist/core/index.js",
   "scripts": {
+    "clean": "rm -rf node_modules build dist .turbo",
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "devlti": "rollup -c -w"
+    "devlti": "rollup -c -w",
+    "lint": "biome check --write --unsafe --diagnostic-level=error",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist"
@@ -43,14 +46,14 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
+    "@biomejs/biome": "^2.4.15",
     "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-swc": "^0.4.0",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
-    "@swc/core": "^1.15.30",
-    "rollup": "^4.60.2",
+    "@swc/core": "^1.15.40",
+    "rollup": "^4.60.4",
     "rollup-plugin-delete": "^3.0.2",
     "rollup-plugin-dts": "^6.4.1",
     "rollup-plugin-swc3": "^0.12.1",

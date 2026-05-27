@@ -1,13 +1,13 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.9/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": true
+    "useIgnoreFile": true,
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!**/(payload)", "!**/_payload", "!**/payload-types.ts", "!**/tailwind.css", "!**/email-templates/**"]
+    "includes": ["**", "!**/tailwind.css", "!**/email-templates/**"],
   },
   "formatter": {
     "enabled": true,
@@ -19,7 +19,13 @@
     "lineWidth": 100,
     "attributePosition": "auto",
     "bracketSpacing": true,
-    "includes": ["**", "!**/dist", "!**/build", "!**/node_modules", "!**/.cache"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/build",
+      "!**/node_modules",
+      "!**/.cache",
+    ],
   },
   "assist": {
     "enabled": true,
@@ -38,13 +44,13 @@
               ":PACKAGE:",
               ":BLANK_LINE:",
               {
-                "type": false
-              }
-            ]
-          }
-        }
-      }
-    }
+                "type": false,
+              },
+            ],
+          },
+        },
+      },
+    },
   },
   "linter": {
     "enabled": true,
@@ -52,7 +58,7 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "warn",
-        "useUniqueElementIds": "off"
+        "useUniqueElementIds": "off",
       },
       "style": {
         "noNonNullAssertion": { "level": "info", "fix": "none" },
@@ -65,20 +71,20 @@
         "noUnusedTemplateLiteral": "error",
         "useNumberNamespace": "error",
         "noInferrableTypes": "error",
-        "noUselessElse": "error"
+        "noUselessElse": "error",
       },
       "suspicious": {
         "noExplicitAny": "off",
         "noConfusingVoidType": "off",
-        "noArrayIndexKey": "warn"
+        "noArrayIndexKey": "warn",
       },
       "performance": {
-        "noDelete": "off"
+        "noDelete": "off",
       },
       "a11y": {
-        "useSemanticElements": "off"
-      }
-    }
+        "useSemanticElements": "off",
+      },
+    },
   },
   "javascript": {
     "formatter": {
@@ -90,17 +96,17 @@
       "bracketSameLine": false,
       "quoteStyle": "single",
       "attributePosition": "auto",
-      "bracketSpacing": true
-    }
+      "bracketSpacing": true,
+    },
   },
   "json": {
     "formatter": {
-      "trailingCommas": "none"
-    }
+      "trailingCommas": "none",
+    },
   },
   "css": {
     "parser": {
-      "cssModules": true
-    }
-  }
+      "cssModules": true,
+    },
+  },
 }

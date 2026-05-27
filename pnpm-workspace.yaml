@@ -1,18 +1,28 @@
 packages:
   - packages/**
   - apps/**
-  - '!apps/gradebook/.next/**'
-  - '!apps/agent/demo/**'
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - '@contrast/fn-inspect'
-  - '@newrelic/native-metrics'
-  - '@parcel/watcher'
-  - '@swc/core'
-  - argon2
-  - bcrypt
-  - core-js
-  - esbuild
-  - lightningcss-cli
-  - protobufjs
-  - sharp
+  - "!apps/gradebook/.next/**"
+  - "!apps/agent/demo/**"
+minimumReleaseAge: 0
+minimumReleaseAgeExclude:
+  - "@infonomic/*"
+allowedDeprecatedVersions:
+  abab: '2'
+  domexception: '4'
+sharedWorkspaceLockfile: true
+allowBuilds:
+  '@biomejs/biome': true
+  '@contrast/fn-inspect': true
+  '@datadog/pprof': false
+  '@newrelic/fn-inspect': true
+  '@newrelic/native-metrics': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  argon2: true
+  bcrypt: true
+  core-js: true
+  esbuild: true
+  lightningcss-cli: true
+  protobufjs: true
+  sharp: true
+  simple-git-hooks: true

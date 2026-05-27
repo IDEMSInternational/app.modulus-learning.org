@@ -9,9 +9,7 @@ import type { ProxyLayer } from './@types'
 // to the relaxed policy.
 const strictPaths = ['sign-in', 'sign-up', 'start-activity', 'account', 'dashboard', 'admin']
 
-const strictPathMatcher = new RegExp(
-  `^(\\/[a-zA-Z]{2})?\\/(${strictPaths.join('|')})(\\/.*)?\\/?$`,
-)
+const strictPathMatcher = new RegExp(`^(\\/[a-zA-Z]{2})?\\/(${strictPaths.join('|')})(\\/.*)?\\/?$`)
 
 function isStrictRoute(pathname: string) {
   return strictPathMatcher.test(pathname)

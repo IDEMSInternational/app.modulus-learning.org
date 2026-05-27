@@ -5,7 +5,6 @@ import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import del from 'rollup-plugin-delete'
 import { dts } from 'rollup-plugin-dts'
-import postcss from 'rollup-plugin-postcss'
 import { swc } from 'rollup-plugin-swc3'
 
 /** @type {import('rollup').RollupOptions} */
