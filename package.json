@@ -2,7 +2,7 @@
   "name": "@modulus-learning/root",
   "version": "0.8.0",
   "private": true,
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.3.0",
   "scripts": {
     "clean": "turbo run clean && rm -rf node_modules",
     "build": "turbo run build",
@@ -22,33 +22,12 @@
     "release:npm": "turbo run build --filter=@modulus-learning/agent && changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
+    "@biomejs/biome": "^2.4.15",
     "@changesets/cli": "^2.31.0",
-    "turbo": "^2.9.6",
+    "turbo": "^2.9.15",
     "typescript": "6.0.3"
   },
   "engines": {
     "node": "^18.20.2 || >=20.9.0"
-  },
-  "pnpm": {
-    "allowedDeprecatedVersions": {
-      "abab": "2",
-      "domexception": "4"
-    },
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@contrast/fn-inspect",
-      "@newrelic/fn-inspect",
-      "@newrelic/native-metrics",
-      "@parcel/watcher",
-      "@swc/core",
-      "argon2",
-      "bcrypt",
-      "core-js",
-      "lightningcss-cli",
-      "protobufjs",
-      "sharp",
-      "unrs-resolver"
-    ]
   }
 }
