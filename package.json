@@ -19,7 +19,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "version-packages": "changeset version",
     "release:tag": "turbo run build --filter=@modulus-learning/agent && changeset tag",
-    "release:npm": "turbo run build --filter=@modulus-learning/agent && changeset publish"
+    "release:npm": "turbo run build --filter=@modulus-learning/agent && changeset publish",
+    "prepare": "simple-git-hooks"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged"
