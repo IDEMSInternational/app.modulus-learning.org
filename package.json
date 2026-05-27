@@ -20,7 +20,7 @@
     "version-packages": "changeset version",
     "release:tag": "turbo run build --filter=@modulus-learning/agent && changeset tag",
     "release:npm": "turbo run build --filter=@modulus-learning/agent && changeset publish",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks || true"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged"
