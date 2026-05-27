@@ -78,7 +78,7 @@ COPY packages/core packages/core
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 
 # Setup pnpm and global tools in a separate layer to reduce peak memory during build
-RUN corepack enable pnpm && pnpm add --global rimraf
+RUN corepack enable pnpm
 
 # Run build
 RUN pnpm run build
