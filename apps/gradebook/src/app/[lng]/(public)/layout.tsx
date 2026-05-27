@@ -6,8 +6,8 @@ import { getMeta } from '@/lib/meta'
 import { ClientUserSessionProvider } from '@/modules/app/session/client-provider'
 import { AppBarFront } from '@/ui/components/app-bar-front'
 import { SiteFooter } from '@/ui/components/site-footer'
-import { DocumentRoot } from '../root'
 import { Providers } from '../providers'
+import { DocumentRoot } from '../root'
 import type { Locale } from '@/i18n/i18n-config'
 
 export async function generateViewport(): Promise<Viewport> {

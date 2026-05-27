@@ -91,4 +91,3 @@ export const getAppCommands = (services: RegisteredServices<AppRegistry>) => {
     lti: services.lti.commands,
   }
 }
-

@@ -11,8 +11,7 @@ export function hasAnyErrors(names: string[], clientErrors: any, serverErrors: a
 export function countErrors(names: string[], clientErrors: any, serverErrors: any): number {
   return names.reduce(
     (count, name) =>
-      count +
-      (Boolean(serverErrors?.[name as keyof typeof serverErrors] ?? clientErrors?.[name]) ? 1 : 0),
+      count + ((serverErrors?.[name as keyof typeof serverErrors] ?? clientErrors?.[name]) ? 1 : 0),
     0
   )
 }

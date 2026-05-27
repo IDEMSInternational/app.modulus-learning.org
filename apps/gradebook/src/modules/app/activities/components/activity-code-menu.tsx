@@ -29,7 +29,9 @@ export function ActivityCodeMenu({
             <Button
               size="sm"
               variant="outlined"
-              render={<LangLink href={`/dashboard/activity-code/${activityCode.id}/activities/edit`} />}
+              render={
+                <LangLink href={`/dashboard/activity-code/${activityCode.id}/activities/edit`} />
+              }
             >
               Update Activity Code
             </Button>

@@ -1,4 +1,7 @@
 {
   "root": false,
-  "extends": ["../../../biome.jsonc"]
+  "extends": ["../../../biome.jsonc"],
+  "files": {
+    "includes": ["!src/routeTree.gen.ts"]
+  }
 }

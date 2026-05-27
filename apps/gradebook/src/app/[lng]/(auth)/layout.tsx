@@ -1,15 +1,16 @@
-import { ScrollToTop } from '@infonomic/uikit/react'
 import { headers } from 'next/headers'
+
+import { ScrollToTop } from '@infonomic/uikit/react'
 import type { Metadata, Viewport } from 'next'
 
 import { getTranslations } from '@/i18n/server'
 import { getMeta } from '@/lib/meta'
-import { getUserSession } from '@/modules/app/session/storage'
 import { UserSessionProvider } from '@/modules/app/session/provider'
+import { getUserSession } from '@/modules/app/session/storage'
 import { AppBarInside } from '@/ui/components/app-bar-inside'
 import { SiteFooter } from '@/ui/components/site-footer'
-import { DocumentRoot } from '../root'
 import { Providers } from '../providers'
+import { DocumentRoot } from '../root'
 import type { Locale } from '@/i18n/i18n-config'
 
 export async function generateViewport(): Promise<Viewport> {
