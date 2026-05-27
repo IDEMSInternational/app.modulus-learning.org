@@ -18,9 +18,12 @@
   "module": "./dist/core/index.js",
   "main": "./dist/core/index.js",
   "scripts": {
+    "clean": "rm -rf node_modules build dist .turbo",
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "devlti": "rollup -c -w"
+    "devlti": "rollup -c -w",
+    "lint": "biome check --write --unsafe --diagnostic-level=error",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist"
