@@ -23,7 +23,7 @@ export function SiteFooter({
         <div
           className={cx(
             'footer-content text-white mx-auto max-w-[1200px]',
-            'gap-0 lg:gap-8 sm:grid lg:grid-cols-[1fr_1.2fr_0.8fr]'
+            'gap-0 lg:gap-8 sm:grid lg:grid-cols-[1fr_1.2fr]'
           )}
         >
           <div className="footer-1">
@@ -73,36 +73,28 @@ export function SiteFooter({
               </span>
             </div>
           </div>
-
           <div className="footer-2 pt-6">
             <div className="grid grid-cols-[1fr_1fr] gap-1 sm:grid-cols-[1fr_1fr_1fr] sm:gap-4 md:gap-6">
               <div>
-                <div className="mb-[0.5em] mt-[0.1em] text-lg font-bold text-white">Sub Menu</div>
-                <ul className="m-0 mb-[1.5em] list-none p-0">
-                  <li className="my-0 flex p-0">
-                    <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
-                      href="/"
-                      lng={lng}
-                    >
+                <h3 className="font-semibold mb-4">About</h3>
+                <ul className="space-y-1 text-gray-400">
+                  <li>
+                    <LangLink className="hover:text-white transition-colors" href="/" lng={lng}>
                       Home
                     </LangLink>
                   </li>
-                  <li className="my-0 flex p-0">
+                  <li>
                     <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
+                      className="hover:text-white transition-colors"
                       href="/about"
                       lng={lng}
                     >
                       About
                     </LangLink>
                   </li>
-                  <li className="my-0 flex p-0">
+                  <li>
                     <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
+                      className="hover:text-white transition-colors"
                       href="/about"
                       lng={lng}
                     >
@@ -112,32 +104,25 @@ export function SiteFooter({
                 </ul>
               </div>
               <div>
-                <div className="mb-[0.5em] mt-[0.1em] text-lg font-bold text-white">Resources</div>
-                <ul className="m-0 mb-[1.5em] list-none p-0">
-                  <li className="my-0 flex p-0">
-                    <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline  text-white"
-                      href="/docs"
-                      lng={lng}
-                    >
+                <h3 className="font-semibold mb-4">Resources</h3>
+                <ul className="space-y-1 text-gray-400">
+                  <li>
+                    <LangLink className="hover:text-white transition-colors" href="/docs" lng={lng}>
                       Docs
                     </LangLink>
                   </li>
-                  <li className="my-0 flex p-0">
+                  <li>
                     <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
+                      className="hover:text-white transition-colors"
                       href="/about"
                       lng={lng}
                     >
                       Partners
                     </LangLink>
                   </li>
-                  <li className="my-0 flex p-0">
+                  <li>
                     <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
+                      className="hover:text-white transition-colors"
                       href="/about"
                       lng={lng}
                     >
@@ -147,35 +132,26 @@ export function SiteFooter({
                 </ul>
               </div>
               <div>
-                <div className="mb-[0.5em] mt-[0.1em] text-lg font-bold text-white">Legal</div>
-                <ul className="m-0 mb-[1.5em] list-none p-0">
-                  <li className="my-0 flex p-0">
+                <h3 className="font-semibold mb-4">Legal</h3>
+                <ul className="space-y-1 text-gray-400">
+                  <li>
                     <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
-                      href="/about"
-                      lng={lng}
-                    >
-                      Terms of Use
-                    </LangLink>
-                  </li>
-                  <li className="my-0 flex p-0">
-                    <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
-                      href="/about"
-                      lng={lng}
+                      href="/legal/privacy-policy"
+                      className="hover:text-white transition-colors"
                     >
                       Privacy Policy
                     </LangLink>
                   </li>
-                  <li className="my-0 flex p-0">
+                  <li>
                     <LangLink
-                      prefetch={false}
-                      className="font-normal no-underline hover:underline text-white"
-                      href="/about"
-                      lng={lng}
+                      href="/legal/terms-of-use"
+                      className="hover:text-white transition-colors"
                     >
+                      Terms of Use
+                    </LangLink>
+                  </li>
+                  <li>
+                    <LangLink href="/legal/cookies" className="hover:text-white transition-colors">
                       Cookies
                     </LangLink>
                   </li>
@@ -183,14 +159,13 @@ export function SiteFooter({
               </div>
             </div>
           </div>
-
-          <div className="footer-3 pt-0 sm:pt-[24px] sm:text-right">
-            <div className="mb-[0.75em] mt-[0.1em] text-lg font-bold text-white">
+          <div className="footer-3 pt-0 sm:pt-[24px] sm:hidden sm:text-right">
+            {/* <div className="mb-[0.75em] mt-[0.1em] text-lg font-bold text-white">
               Connect with Us
             </div>
             <div className="mb-[1em]">
               <span>Social connect here...</span>
-            </div>
+            </div> */}
             <div className="mt-[1.5em] block sm:hidden">
               <p className="text-[0.9em] mt-2">
                 Made with ❤️ by{' '}
