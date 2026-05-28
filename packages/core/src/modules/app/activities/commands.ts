@@ -2,11 +2,16 @@ import { z } from 'zod'
 
 import { type CoreUtils, cached } from '@/lib/utils.js'
 import {
+  activityCodeMemberSchema,
   activityCodeSchema,
   activityCodeWithActivitiesSchema,
+  addActivityCodeMemberRequestSchema,
   createActivityCodeRequestSchema,
+  instructorSearchResultSchema,
   progressReportSchema,
   progressRequestSchema,
+  removeActivityCodeMemberRequestSchema,
+  searchInstructorsRequestSchema,
   startActivityRequestSchema,
   startActivityResponseSchema,
   updateActivityCodeRequestSchema,
@@ -139,13 +144,88 @@ export class ActivityCommands {
       method: 'updateActivityCode',
       auth: {
         mode: 'user',
-        abilities: [], // TODO: Should there be an ability for this?
+        abilities: ['activity_codes:update_own'],
       },
       schemas: {
         input: updateActivityCodeRequestSchema,
         output: activityCodeSchema,
       },
       handler: this.activityService.updateActivityCode.bind(this.activityService),
+    })
+  }
+
+  @cached get deleteActivityCode() {
+    return this.utils.createCommand({
+      method: 'deleteActivityCode',
+      auth: {
+        mode: 'user',
+        abilities: ['activity_codes:delete_own'],
+      },
+      schemas: {
+        input: z.string(),
+        output: z.void(),
+      },
+      handler: this.activityService.deleteActivityCode.bind(this.activityService),
+    })
+  }
+
+  @cached get listActivityCodeMembers() {
+    return this.utils.createCommand({
+      method: 'listActivityCodeMembers',
+      auth: {
+        mode: 'user',
+        abilities: ['activity_codes:read_own'],
+      },
+      schemas: {
+        input: z.string(),
+        output: activityCodeMemberSchema.array(),
+      },
+      handler: this.activityService.listActivityCodeMembers.bind(this.activityService),
+    })
+  }
+
+  @cached get searchInstructors() {
+    return this.utils.createCommand({
+      method: 'searchInstructors',
+      auth: {
+        mode: 'user',
+        abilities: ['activity_codes:update_own'],
+      },
+      schemas: {
+        input: searchInstructorsRequestSchema,
+        output: instructorSearchResultSchema.array(),
+      },
+      handler: this.activityService.searchInstructors.bind(this.activityService),
+    })
+  }
+
+  @cached get addActivityCodeMember() {
+    return this.utils.createCommand({
+      method: 'addActivityCodeMember',
+      auth: {
+        mode: 'user',
+        abilities: ['activity_codes:update_own'],
+      },
+      schemas: {
+        input: addActivityCodeMemberRequestSchema,
+        output: activityCodeMemberSchema.array(),
+      },
+      handler: this.activityService.addActivityCodeMember.bind(this.activityService),
+    })
+  }
+
+  @cached get removeActivityCodeMember() {
+    return this.utils.createCommand({
+      method: 'removeActivityCodeMember',
+      auth: {
+        mode: 'user',
+        abilities: ['activity_codes:update_own'],
+      },
+      schemas: {
+        input: removeActivityCodeMemberRequestSchema,
+        output: activityCodeMemberSchema.array(),
+      },
+      handler: this.activityService.removeActivityCodeMember.bind(this.activityService),
     })
   }
 }

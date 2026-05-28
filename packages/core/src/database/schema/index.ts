@@ -1,5 +1,6 @@
 export * from './source/activities.js'
 export * from './source/activity-activity-code.js'
+export * from './source/activity-code-member.js'
 export * from './source/activity-codes.js'
 export * from './source/admin-permissions.js'
 export * from './source/admin-reports-mau.js'

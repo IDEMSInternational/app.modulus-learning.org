@@ -4,13 +4,22 @@ import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generato
 import { v7 as uuidv7 } from 'uuid'
 
 import { BaseService, method } from '@/lib/base-service.js'
-import { ERR_ACTIVITY_CODE_GENERATION, ERR_ACTIVITY_CODE_NOT_FOUND } from '../errors.js'
+import {
+  ERR_ACTIVITY_CODE_GENERATION,
+  ERR_ACTIVITY_CODE_NOT_FOUND,
+  ERR_USER_NOT_INSTRUCTOR,
+} from '../errors.js'
 import {
   type ActivityCode,
+  type ActivityCodeMember,
   type ActivityCodeWithActivities,
+  type AddActivityCodeMemberRequest,
   type CreateActivityCodeRequest,
+  type InstructorSearchResult,
   type ProgressReport,
   type ProgressRequest,
+  type RemoveActivityCodeMemberRequest,
+  type SearchInstructorsRequest,
   toActivity,
   toActivityCode,
   type UpdateActivityCodeRequest,
@@ -39,33 +48,48 @@ export class ActivityService extends BaseService {
 
   @method
   async listActivityCodes(userAuth: UserAuth): Promise<ActivityCode[]> {
-    const records = await this.queries.listActivityCodesByOwner(userAuth.id)
+    const records = await this.queries.listActivityCodesByMember(userAuth.id)
     return records.map(toActivityCode)
   }
 
-  @method
-  async getActivityCode(_userAuth: UserAuth, id: string): Promise<ActivityCode> {
+  /**
+   * Loads an activity code only if the caller is a member of it. Treated as
+   * a 404 (ERR_ACTIVITY_CODE_NOT_FOUND) when the caller is not a member, so
+   * we don't leak the existence of codes that belong to other instructors.
+   */
+  private async loadAsMember(
+    userAuth: UserAuth,
+    id: string
+  ): Promise<{
+    record: NonNullable<Awaited<ReturnType<ActivityQueries['findActivityCodeById']>>>
+  }> {
     const record = await this.queries.findActivityCodeById(id)
     if (record == null) {
       throw ERR_ACTIVITY_CODE_NOT_FOUND({
         message: 'activity code not found',
       }).log(this.logger)
     }
+    const member = await this.queries.isMember(id, userAuth.id)
+    if (!member) {
+      throw ERR_ACTIVITY_CODE_NOT_FOUND({
+        message: 'activity code not found for user',
+      }).log(this.logger)
+    }
+    return { record }
+  }
 
+  @method
+  async getActivityCode(userAuth: UserAuth, id: string): Promise<ActivityCode> {
+    const { record } = await this.loadAsMember(userAuth, id)
     return toActivityCode(record)
   }
 
   @method
   async getActivitiesByActivityCodeId(
-    _userAuth: UserAuth,
+    userAuth: UserAuth,
     id: string
   ): Promise<ActivityCodeWithActivities> {
-    const activityCodeRecord = await this.queries.findActivityCodeById(id)
-    if (activityCodeRecord == null) {
-      throw ERR_ACTIVITY_CODE_NOT_FOUND({
-        message: 'activity code not found',
-      }).log(this.logger)
-    }
+    const { record: activityCodeRecord } = await this.loadAsMember(userAuth, id)
 
     const activityRecords = await this.queries.listActivitiesByActivityCodeId(activityCodeRecord.id)
 
@@ -76,13 +100,8 @@ export class ActivityService extends BaseService {
   }
 
   @method
-  async getProgress(_userAuth: UserAuth, request: ProgressRequest): Promise<ProgressReport> {
-    const activityCodeRecord = await this.queries.findActivityCodeById(request.id)
-    if (activityCodeRecord == null) {
-      throw ERR_ACTIVITY_CODE_NOT_FOUND({
-        message: 'activity code not found',
-      }).log(this.logger)
-    }
+  async getProgress(userAuth: UserAuth, request: ProgressRequest): Promise<ProgressReport> {
+    const { record: activityCodeRecord } = await this.loadAsMember(userAuth, request.id)
 
     const { page, page_size, query, order, desc } = request.options
 
@@ -171,8 +190,11 @@ export class ActivityService extends BaseService {
         code: request.code,
         private_code,
         url_prefix: request.url_prefix ?? null,
-        user_id: userAuth.id,
+        created_by: userAuth.id,
       })
+
+      // Creator is automatically the first member.
+      await this.mutations.addMember(activityCodeRecord.id, userAuth.id)
 
       await this.mutations.ensureActivitiesExist(request.urls)
       const activityRecords = await this.queries.findActivitiesByURL(request.urls)
@@ -193,13 +215,8 @@ export class ActivityService extends BaseService {
     //   throw new ERR_INVALID_ACTIVITY_URL(urlValidationResult.message)
     // }
 
-    // 1. Check that we have an existing activity code for the user
-    const activityCodeRecord = await this.queries.findActivityCodeById(id)
-    if (activityCodeRecord?.user_id !== userAuth.id) {
-      throw ERR_ACTIVITY_CODE_NOT_FOUND({
-        message: 'activity code not found for user',
-      }).log(this.logger)
-    }
+    // 1. Check that the caller is a member of the activity code.
+    const { record: activityCodeRecord } = await this.loadAsMember(userAuth, id)
 
     // 2. We'll clear/delete all existing activityActivityCode joins for this activity code
     // so that we can re-create them with the new URLs.
@@ -222,5 +239,55 @@ export class ActivityService extends BaseService {
 
       return toActivityCode(updatedActivityCodeRecord)
     })
+  }
+
+  @method
+  async deleteActivityCode(userAuth: UserAuth, id: string): Promise<void> {
+    await this.loadAsMember(userAuth, id)
+    await this.mutations.deleteActivityCode(id)
+  }
+
+  @method
+  async listActivityCodeMembers(
+    userAuth: UserAuth,
+    activity_code_id: string
+  ): Promise<ActivityCodeMember[]> {
+    await this.loadAsMember(userAuth, activity_code_id)
+    return await this.queries.listMembers(activity_code_id)
+  }
+
+  @method
+  async searchInstructors(
+    userAuth: UserAuth,
+    { activity_code_id, query, limit }: SearchInstructorsRequest
+  ): Promise<InstructorSearchResult[]> {
+    await this.loadAsMember(userAuth, activity_code_id)
+    return await this.queries.searchInstructors(activity_code_id, query, limit)
+  }
+
+  @method
+  async addActivityCodeMember(
+    userAuth: UserAuth,
+    { activity_code_id, user_id }: AddActivityCodeMemberRequest
+  ): Promise<ActivityCodeMember[]> {
+    await this.loadAsMember(userAuth, activity_code_id)
+    const isInstructor = await this.queries.isInstructor(user_id)
+    if (!isInstructor) {
+      throw ERR_USER_NOT_INSTRUCTOR({
+        message: 'target user is not an instructor',
+      }).log(this.logger)
+    }
+    await this.mutations.addMember(activity_code_id, user_id)
+    return await this.queries.listMembers(activity_code_id)
+  }
+
+  @method
+  async removeActivityCodeMember(
+    userAuth: UserAuth,
+    { activity_code_id, user_id }: RemoveActivityCodeMemberRequest
+  ): Promise<ActivityCodeMember[]> {
+    await this.loadAsMember(userAuth, activity_code_id)
+    await this.mutations.removeMember(activity_code_id, user_id)
+    return await this.queries.listMembers(activity_code_id)
   }
 }

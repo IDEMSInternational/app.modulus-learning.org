@@ -1,19 +1,35 @@
-import { and, asc, desc, eq, getTableColumns, inArray, sql } from 'drizzle-orm'
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  getTableColumns,
+  ilike,
+  inArray,
+  notExists,
+  or,
+  sql,
+} from 'drizzle-orm'
 import { v7 as uuidv7 } from 'uuid'
 
 import {
   activities,
   activityActivityCode,
+  activityCodeMember,
   activityCodes,
   enrollment,
   progress,
+  roles,
+  roleUser,
   users,
 } from '@/database/schema/index.js'
 import { BaseService, method } from '@/lib/base-service.js'
 import type { DBManager } from '@/lib/db-manager.js'
 import type { CoreLogger } from '@/lib/logger.js'
 import type { CoreUtils } from '@/lib/utils.js'
-import type { ProgressRequest } from '../schemas.js'
+import type { ActivityCodeMember, InstructorSearchResult, ProgressRequest } from '../schemas.js'
+
+const INSTRUCTOR_ROLE_MACHINE_NAME = 'instructor'
 
 // TODO: Add Update types?
 export type ActivityRecord = typeof activities.$inferSelect
@@ -50,13 +66,119 @@ export class ActivityQueries extends BaseService {
   }
 
   @method
-  async listActivityCodesByOwner(user_id: string): Promise<ActivityCodeRecord[]> {
+  async listActivityCodesByMember(user_id: string): Promise<ActivityCodeRecord[]> {
     return await this.db
       .get()
-      .query.activityCodes.findMany({
-        where: eq(activityCodes.user_id, user_id),
-      })
+      .select({ ...getTableColumns(activityCodes) })
+      .from(activityCodes)
+      .innerJoin(activityCodeMember, eq(activityCodes.id, activityCodeMember.activity_code_id))
+      .where(eq(activityCodeMember.user_id, user_id))
       .catch(this.utils.wrapDbErrorNew())
+  }
+
+  @method
+  async isMember(activity_code_id: string, user_id: string): Promise<boolean> {
+    const rows = await this.db
+      .get()
+      .select({ user_id: activityCodeMember.user_id })
+      .from(activityCodeMember)
+      .where(
+        and(
+          eq(activityCodeMember.activity_code_id, activity_code_id),
+          eq(activityCodeMember.user_id, user_id)
+        )
+      )
+      .limit(1)
+      .catch(this.utils.wrapDbErrorNew())
+    return rows.length > 0
+  }
+
+  @method
+  async listMembers(activity_code_id: string): Promise<ActivityCodeMember[]> {
+    const rows = await this.db
+      .get()
+      .select({
+        activity_code_id: activityCodeMember.activity_code_id,
+        user_id: activityCodeMember.user_id,
+        full_name: users.full_name,
+        email: users.email,
+        created_at: activityCodeMember.created_at,
+      })
+      .from(activityCodeMember)
+      .innerJoin(users, eq(activityCodeMember.user_id, users.id))
+      .where(eq(activityCodeMember.activity_code_id, activity_code_id))
+      .orderBy(asc(activityCodeMember.created_at))
+      .catch(this.utils.wrapDbErrorNew())
+
+    return rows.map((row) => ({
+      activity_code_id: row.activity_code_id,
+      user_id: row.user_id,
+      full_name: row.full_name,
+      email: row.email,
+      created_at: row.created_at.toISOString(),
+    }))
+  }
+
+  @method
+  async searchInstructors(
+    activity_code_id: string,
+    query: string,
+    limit: number
+  ): Promise<InstructorSearchResult[]> {
+    const pattern = `%${query.trim()}%`
+    const alreadyMember = this.db
+      .get()
+      .select({ marker: sql`1` })
+      .from(activityCodeMember)
+      .where(
+        and(
+          eq(activityCodeMember.activity_code_id, activity_code_id),
+          eq(activityCodeMember.user_id, users.id)
+        )
+      )
+
+    return await this.db
+      .get()
+      .selectDistinct({
+        user_id: users.id,
+        full_name: users.full_name,
+        email: users.email,
+      })
+      .from(users)
+      .innerJoin(roleUser, eq(roleUser.user_id, users.id))
+      .innerJoin(roles, eq(roles.id, roleUser.role_id))
+      .where(
+        and(
+          eq(roles.machine_name, INSTRUCTOR_ROLE_MACHINE_NAME),
+          query.trim().length === 0
+            ? sql`true`
+            : or(
+                ilike(users.full_name, pattern),
+                ilike(users.given_name, pattern),
+                ilike(users.family_name, pattern),
+                ilike(users.email, pattern)
+              ),
+          notExists(alreadyMember)
+        )
+      )
+      .orderBy(asc(users.full_name))
+      .limit(limit)
+      .catch(this.utils.wrapDbErrorNew())
+  }
+
+  @method
+  async isInstructor(user_id: string): Promise<boolean> {
+    const rows = await this.db
+      .get()
+      .select({ marker: sql`1` })
+      .from(roleUser)
+      .innerJoin(roles, eq(roles.id, roleUser.role_id))
+      .where(
+        and(eq(roleUser.user_id, user_id), eq(roles.machine_name, INSTRUCTOR_ROLE_MACHINE_NAME))
+      )
+      .limit(1)
+      .catch(this.utils.wrapDbErrorNew())
+    return rows.length > 0
   }
 
   @method
@@ -292,6 +414,39 @@ export class ActivityMutations extends BaseService {
       .get()
       .delete(activityActivityCode)
       .where(eq(activityActivityCode.activity_code_id, activityCode.id))
+      .catch(this.utils.wrapDbErrorNew())
+  }
+
+  @method
+  async addMember(activity_code_id: string, user_id: string): Promise<void> {
+    await this.db
+      .get()
+      .insert(activityCodeMember)
+      .values({ activity_code_id, user_id })
+      .onConflictDoNothing()
+      .catch(this.utils.wrapDbErrorNew())
+  }
+
+  @method
+  async removeMember(activity_code_id: string, user_id: string): Promise<void> {
+    await this.db
+      .get()
+      .delete(activityCodeMember)
+      .where(
+        and(
+          eq(activityCodeMember.activity_code_id, activity_code_id),
+          eq(activityCodeMember.user_id, user_id)
+        )
+      )
+      .catch(this.utils.wrapDbErrorNew())
+  }
+
+  @method
+  async deleteActivityCode(id: string): Promise<void> {
+    await this.db
+      .get()
+      .delete(activityCodes)
+      .where(eq(activityCodes.id, id))
       .catch(this.utils.wrapDbErrorNew())
   }
 

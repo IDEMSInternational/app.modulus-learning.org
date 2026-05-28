@@ -46,12 +46,31 @@ export interface Activity {
 
 export interface ActivityCode {
   id: string
-  user_id: string
+  created_by: string | null
   code: string
   private_code: string
   url_prefix: string | null
   created_at: string
   updated_at: string
+}
+
+export interface ActivityCodeMember {
+  activity_code_id: string
+  user_id: string
+  full_name: string | null
+  email: string | null
+  created_at: string
+}
+
+export interface InstructorSearchResult {
+  user_id: string
+  full_name: string | null
+  email: string | null
+}
+
+export interface MemberMutationState {
+  status: 'idle' | 'success' | 'failed'
+  message?: string
 }
 
 export interface Progress {

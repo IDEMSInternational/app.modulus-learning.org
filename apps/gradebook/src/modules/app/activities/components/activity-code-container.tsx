@@ -5,19 +5,24 @@ import { useState } from 'react'
 import { Button, Tabs } from '@infonomic/uikit/react'
 import cx from 'classnames'
 
+import { ActivityCodeMembersPanel } from '@/modules/app/activities/components/activity-code-members-panel'
 import { UpdateActivityCodeForm } from '@/modules/app/activities/components/update-activity-code-form'
 import type { Locale } from '@/i18n/i18n-config'
-import type { Activity, ActivityCode } from '../@types'
+import type { Activity, ActivityCode, ActivityCodeMember } from '../@types'
 
 type ActivityCodeContainerProps = {
   activityCode: ActivityCode
   activities: Activity[]
+  members: ActivityCodeMember[]
+  currentUserId: string
   lng: Locale
 }
 
 export function ActivityCodeContainer({
   activityCode,
   activities,
+  members,
+  currentUserId,
   lng,
 }: ActivityCodeContainerProps) {
   const [currentTab, setCurrentTab] = useState<string>('detailsTab')
@@ -75,7 +80,11 @@ export function ActivityCodeContainer({
         <UpdateActivityCodeForm activityCode={activityCode} activities={activities} lng={lng} />
       </Tabs.Content>
       <Tabs.Content value="membersTab" keepMounted={true}>
-        <p> Membership view and form here.... </p>
+        <ActivityCodeMembersPanel
+          activityCodeId={activityCode.id}
+          initialMembers={members}
+          currentUserId={currentUserId}
+        />
       </Tabs.Content>
     </Tabs>
   )
