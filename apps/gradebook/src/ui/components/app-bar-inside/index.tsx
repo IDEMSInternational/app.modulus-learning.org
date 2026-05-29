@@ -108,7 +108,7 @@ export const AppBarInside = forwardRef<Ref, AppBarProps>(function AppBar(
           <Branding lng={lng} hasScrolled={hasScrolled} pathName={pathName} />
         </div>
         {/* <MainMenu lng={lng} color={appBarTextColor} /> */}
-        <LanguageMenu lng={lng} color={appBarTextColor} />
+        {/*<LanguageMenu lng={lng} color={appBarTextColor} />*/}
         <Suspense>
           <ThemeSwitch className="mr-3" />
         </Suspense>

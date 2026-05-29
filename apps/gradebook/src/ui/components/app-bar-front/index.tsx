@@ -111,7 +111,7 @@ export const AppBarFront = forwardRef<Ref, AppBarProps>(function AppBar(
         <div className="lg:flex-initial mr-auto">
           <Branding lng={lng} hasScrolled={hasScrolled} pathName={pathName} />
         </div>
-        <LanguageMenu lng={lng} color={appBarTextColor} />
+        {/*<LanguageMenu lng={lng} color={appBarTextColor} />*/}
         <ThemeSwitch className="mr-3" />
         {session != null ? <UserMenu lng={lng} /> : <SignIn lng={lng} />}
       </div>

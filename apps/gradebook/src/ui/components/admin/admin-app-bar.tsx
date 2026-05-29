@@ -105,7 +105,7 @@ export function AdminAppBar({ className, lng, ...other }: AppBarProps) {
         <div className="lg:flex-initial mr-auto">
           <Branding lng={lng} hasScrolled={hasScrolled} pathName={pathName} />
         </div>
-        <LanguageMenu lng={lng} color={appBarTextColor} />
+        {/*<LanguageMenu lng={lng} color={appBarTextColor} />*/}
         <Suspense>
           <ThemeSwitch className="mr-3" />
         </Suspense>
