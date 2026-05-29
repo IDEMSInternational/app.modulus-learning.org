@@ -347,7 +347,7 @@ export class ActivityMutations extends BaseService {
   @method
   async updateActivityCode(
     id: string,
-    data: Pick<ActivityCodeInsert, 'url_prefix'>
+    data: Pick<ActivityCodeInsert, 'url_prefix' | 'description'>
   ): Promise<ActivityCodeRecord> {
     const [activityCode] = await this.db
       .get()

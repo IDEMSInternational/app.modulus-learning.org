@@ -181,6 +181,11 @@ export function ActivitiesView({
             Edit
           </Button>
         </div>
+        {activityCode?.description && (
+          <div>
+            <p> {activityCode?.description}</p>
+          </div>
+        )}
         <div className="options flex flex-col gap-2 sm:flex-row items-start sm:items-center mt-3 mb-3">
           <Search
             onSearch={handleOnSearch}

@@ -190,6 +190,7 @@ export class ActivityService extends BaseService {
         code: request.code,
         private_code,
         url_prefix: request.url_prefix ?? null,
+        description: request.description ?? null,
         created_by: userAuth.id,
       })
 
@@ -207,7 +208,7 @@ export class ActivityService extends BaseService {
   @method
   async updateActivityCode(
     userAuth: UserAuth,
-    { id, url_prefix, urls }: UpdateActivityCodeRequest
+    { id, url_prefix, description, urls }: UpdateActivityCodeRequest
   ): Promise<ActivityCode> {
     // TODO: Validate urls, here and in createActivityCode
     // const urlValidationResult = validateUrls(urls)
@@ -227,6 +228,7 @@ export class ActivityService extends BaseService {
     return this.tx.withTransaction(async () => {
       const updatedActivityCodeRecord = await this.mutations.updateActivityCode(id, {
         url_prefix: url_prefix ?? null,
+        description: description ?? null,
       })
 
       // Insert the activity URLs into the activities table

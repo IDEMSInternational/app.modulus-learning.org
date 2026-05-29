@@ -161,6 +161,11 @@ export function LearnersProgressView({ data, lng }: { data: ProgressResponse; ln
           <h1 className="!m-0 pb-[2px]">{data?.included?.activity_code?.code}</h1>
           <Stats total={data.meta.total} />
         </div>
+        {data?.included?.activity_code?.description && (
+          <div>
+            <p> {data?.included?.activity_code?.description}</p>
+          </div>
+        )}
         <div className="options flex flex-col gap-2 sm:flex-row items-start sm:items-center mt-3 mb-3">
           <Search
             onSearch={handleOnSearch}

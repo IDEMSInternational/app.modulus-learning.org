@@ -32,6 +32,7 @@ export function UpdateActivityCodeForm({
 
   const [formState, formAction, isPending] = useActionState(updateActivityCode, initialState)
   const [urlPrefix, setUrlPrefix] = useState(initialUrlPrefix)
+  const [description, setDescription] = useState(activityCode.description ?? '')
   const [urlsValue, setUrlsValue] = useState(initialUrlsValue)
   const [urlError, setUrlError] = useState(!initialUrlValidation.valid)
   const [urlPrefixError, setUrlPrefixError] = useState(!initialUrlPrefixValidation.valid)
@@ -39,6 +40,7 @@ export function UpdateActivityCodeForm({
   const [urlPrefixErrorText, setUrlPrefixErrorText] = useState(initialUrlPrefixValidation.message)
   const inputId = useId()
   const textAreaId = useId()
+  const descriptionId = useId()
   const errorTextId = useId()
 
   const validateFormFields = (nextUrls: string, nextUrlPrefix: string): boolean => {
@@ -116,6 +118,20 @@ export function UpdateActivityCodeForm({
       )}
       <form onSubmit={handleOnSubmit}>
         <input type="hidden" name="id" value={activityCode.id} />
+        <div className="mt-2">
+          <Input
+            id={descriptionId}
+            name="description"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            // rows={3}
+            maxLength={1024}
+            label="Description"
+            placeholder="Briefly describe why this activity code was created and how it's being used."
+            className="w-full"
+            helpText="Optional. A short description to help you and other instructors understand the purpose of this activity code and its associated activities."
+          />
+        </div>
         <div className="mt-2">
           <Input
             id={inputId}

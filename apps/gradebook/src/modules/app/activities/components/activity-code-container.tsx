@@ -35,7 +35,7 @@ export function ActivityCodeContainer({
     <Tabs
       defaultValue="detailsTab"
       onValueChange={handleOnTabValueChange}
-      className="p-0 overflow-hidden"
+      className="p-0 overflow-hidden min-h-[500px]"
     >
       <Tabs.List className="p-0 border-t-0 border-r-0 gap-0 border-l-0 border-b-1 rounded-none">
         <Tabs.Trigger

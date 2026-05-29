@@ -12,6 +12,7 @@ export const activityCodes = pgTable('activity_codes', {
   code: varchar('code', { length: 255 }).notNull().unique(),
   private_code: varchar('private_code', { length: 255 }).notNull().unique(),
   url_prefix: varchar('url_prefix', { length: 255 }),
+  description: varchar('description', { length: 1024 }),
   ...timestamps,
 })
 

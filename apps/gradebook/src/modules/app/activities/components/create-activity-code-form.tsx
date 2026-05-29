@@ -17,6 +17,7 @@ const initialState: ActivityCodeFormState = { errors: {}, status: 'idle' }
 export function CreateActivityCodeForm({ lng }: { lng: Locale }): React.JSX.Element {
   const [formState, formAction, isPending] = useActionState(createActivityCode, initialState)
   const [urlPrefix, setUrlPrefix] = useState('')
+  const [description, setDescription] = useState('')
   const [urlsValue, setUrlsValue] = useState('')
   const [urlError, setUrlError] = useState(false)
   const [urlPrefixError, setUrlPrefixError] = useState(false)
@@ -26,6 +27,7 @@ export function CreateActivityCodeForm({ lng }: { lng: Locale }): React.JSX.Elem
   const [activityCode, setActivityCode] = useState<string>('')
   const inputId = useId()
   const textAreaId = useId()
+  const descriptionId = useId()
   const errorTextId = useId()
 
   const validateFormFields = (nextUrls: string, nextUrlPrefix: string): boolean => {
@@ -118,6 +120,20 @@ export function CreateActivityCodeForm({ lng }: { lng: Locale }): React.JSX.Elem
       />
       <form onSubmit={handleOnSubmit}>
         <input type="hidden" name="activity_code" value={activityCode} />
+        <div className="mt-2">
+          <Input
+            id={descriptionId}
+            name="description"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            // rows={3}
+            maxLength={1024}
+            label="Description"
+            placeholder="Briefly describe why this activity code was created and how it's being used."
+            className="w-full"
+            helpText="Optional. A short description to help you and other instructors understand the purpose of this activity code and its associated activities."
+          />
+        </div>
         <div className="mt-2">
           <Input
             id={inputId}

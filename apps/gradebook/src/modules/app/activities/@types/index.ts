@@ -18,6 +18,7 @@ export interface ActivityCodeFormState {
   errors: {
     urls?: string[]
     url_prefix?: string[]
+    description?: string[]
   }
   message?: string
   status: 'success' | 'failed' | 'idle'
@@ -50,6 +51,7 @@ export interface ActivityCode {
   code: string
   private_code: string
   url_prefix: string | null
+  description: string | null
   created_at: string
   updated_at: string
 }
