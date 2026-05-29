@@ -106,8 +106,41 @@ export function ActivityCodeMembersPanel({
 
   return (
     <div className="flex flex-col gap-4 p-4">
+      <div className="max-w-[400px]">
+        <Autocomplete<InstructorSearchResult>
+          id={`add-member-${activityCodeId}`}
+          // label="Optionally add other instructors to this activity code."
+          placeholder="Search by name or email"
+          helpText="Optionally add other instructors to this activity code."
+          mode="none"
+          items={items}
+          value={inputValue}
+          onValueChange={(value: string) => {
+            setInputValue(value)
+          }}
+          emptyText={
+            (debouncedQuery ?? '').trim().length === 0
+              ? 'Start typing to search instructors.'
+              : 'No matching instructors.'
+          }
+        >
+          {(instructor: InstructorSearchResult) => (
+            <AutocompleteItem
+              key={instructor.user_id}
+              value={instructor}
+              onClick={() => handleSelectInstructor(instructor)}
+            >
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">{instructor.full_name ?? '(no name)'}</span>
+                <span className="text-xs text-gray-500">{instructor.email ?? '(no email)'}</span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+        {error != null && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      </div>
       <div>
-        <h3 className="text-sm font-semibold mb-2">Members</h3>
+        <h3 className="text-[1.1rem] font-semibold mb-2">Members</h3>
         {members.length === 0 ? (
           <p className="text-sm text-gray-500">No members yet.</p>
         ) : (
@@ -138,40 +171,6 @@ export function ActivityCodeMembersPanel({
             ))}
           </ul>
         )}
-      </div>
-
-      <div>
-        <Autocomplete<InstructorSearchResult>
-          id={`add-member-${activityCodeId}`}
-          label="Add an instructor"
-          placeholder="Search by name or email"
-          helpText="Start typing to find an instructor to add."
-          mode="none"
-          items={items}
-          value={inputValue}
-          onValueChange={(value: string) => {
-            setInputValue(value)
-          }}
-          emptyText={
-            (debouncedQuery ?? '').trim().length === 0
-              ? 'Start typing to search instructors.'
-              : 'No matching instructors.'
-          }
-        >
-          {(instructor: InstructorSearchResult) => (
-            <AutocompleteItem
-              key={instructor.user_id}
-              value={instructor}
-              onClick={() => handleSelectInstructor(instructor)}
-            >
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">{instructor.full_name ?? '(no name)'}</span>
-                <span className="text-xs text-gray-500">{instructor.email ?? '(no email)'}</span>
-              </div>
-            </AutocompleteItem>
-          )}
-        </Autocomplete>
-        {error != null && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
 
       <RemoveMemberConfirmModal

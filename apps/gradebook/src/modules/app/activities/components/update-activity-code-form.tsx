@@ -106,7 +106,7 @@ export function UpdateActivityCodeForm({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-4 pt-2">
       {formState.status === 'failed' && (
         <ErrorText
           id={errorTextId}
@@ -138,9 +138,9 @@ export function UpdateActivityCodeForm({
             name="urls"
             rows={10}
             label="Activity URLs"
-            placeholder="Enter one or more destination activity URLs for this activity code."
+            placeholder="Enter one or more destination activity URLs for this activity code (line separated)."
             className="w-full"
-            helpText="Enter one or more destination activity URLs for this activity code. If a required URL prefix is set above, every URL must begin with it."
+            helpText="Optional. Enter destination activity URLs (line separated) for this activity code. Activities can be added or removed at any time. If a URL prefix is set above, every URL must begin with the URL prefix."
             error={urlError}
             errorText={urlErrorText}
           />
