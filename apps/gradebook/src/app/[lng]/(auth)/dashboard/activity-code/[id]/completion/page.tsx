@@ -37,6 +37,11 @@ export default async function ProgressPage({
       <Section>
         <Container className="sm:px-[32px]">
           <h1 className="mb-2">{data?.included?.activity_code?.code ?? 'Not Found'}</h1>
+          {data?.included?.activity_code?.description && (
+            <div>
+              <p> {data?.included?.activity_code.description}</p>
+            </div>
+          )}
           <p className="text-muted-foreground mb-4">
             Tracking completion patterns for 5,000 students over a 3-month period
           </p>

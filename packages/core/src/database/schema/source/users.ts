@@ -2,6 +2,7 @@ import { relations } from 'drizzle-orm'
 import { boolean, index, integer, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 
 import { timestamps } from '../common.js'
+import { activityCodeMember } from './activity-code-member.js'
 import { roleUser } from './role-user.js'
 
 export const users = pgTable(
@@ -38,4 +39,5 @@ export const users = pgTable(
 
 export const usersRelations = relations(users, ({ many }) => ({
   role_user: many(roleUser),
+  activity_code_memberships: many(activityCodeMember),
 }))

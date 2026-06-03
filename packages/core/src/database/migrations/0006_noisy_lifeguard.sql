@@ -1,0 +1,1 @@
+ALTER TABLE "activity_codes" ADD COLUMN "description" varchar(1024);

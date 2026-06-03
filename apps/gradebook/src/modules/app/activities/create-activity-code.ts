@@ -26,6 +26,7 @@ export const createActivityCode = async (
   const activity_code = formData.get('activity_code') as string | null
   const urls = formData.get('urls') as string | null
   const urlPrefix = formData.get('url_prefix') as string | null
+  const description = formData.get('description') as string | null
 
   if (activity_code == null || typeof activity_code !== 'string') {
     return {
@@ -47,6 +48,23 @@ export const createActivityCode = async (
     return {
       errors: { url_prefix: ['URL prefix must be a string.'] },
       message: 'Invalid URL prefix.',
+      status: 'failed',
+    }
+  }
+
+  if (description != null && typeof description !== 'string') {
+    return {
+      errors: { description: ['Description must be a string.'] },
+      message: 'Invalid description.',
+      status: 'failed',
+    }
+  }
+
+  const normalizedDescription = description?.trim() ?? ''
+  if (normalizedDescription.length > 1024) {
+    return {
+      errors: { description: ['Description must be 1024 characters or fewer.'] },
+      message: 'Invalid description.',
       status: 'failed',
     }
   }
@@ -81,6 +99,7 @@ export const createActivityCode = async (
   const result = await core.app.activities.createActivityCode(userAuth, {
     code: activity_code,
     url_prefix: normalizedUrlPrefix === '' ? null : normalizedUrlPrefix,
+    description: normalizedDescription === '' ? null : normalizedDescription,
     urls: urlsArray,
   })
 

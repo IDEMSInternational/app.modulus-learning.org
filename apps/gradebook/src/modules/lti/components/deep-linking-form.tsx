@@ -191,48 +191,57 @@ export function DeepLinkingForm({
                   )}
                 </div>
                 {activityCode && (
-                  <div className="mb-4">
-                    {isLoadingActivities ? (
-                      <div className="flex items-center gap-2 py-2 text-sm text-gray-500">
-                        <LoaderEllipsis size={24} color="#9ca3af" />
-                        <span>Loading activities...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <Autocomplete<ActivityAutocompleteItem>
-                          key={activityCode}
-                          id="activity_url_autocomplete"
-                          placeholder="Search or enter an activity URL"
-                          inputSize="sm"
-                          items={autocompleteItems}
-                          value={inputValue}
-                          onValueChange={handleAutocompleteValueChange}
-                          error={activityUrlError != null && activityUrlError.length > 0}
-                          errorText={activityUrlError}
-                          helpText={activityUrlHelpText}
-                        >
-                          {(activity: ActivityAutocompleteItem) => (
-                            <AutocompleteItem key={activity.id} value={activity.url}>
-                              {activity.isPrefixSuggestion
-                                ? `${activity.name}: ${activity.url}`
-                                : activity.name
-                                  ? `${activity.name} (${activity.url})`
-                                  : activity.url}
-                            </AutocompleteItem>
+                  <>
+                    {selectedActivityCode?.description != null &&
+                      selectedActivityCode.description.length > 0 && (
+                        <div className="mb-4 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                          <p className="mb-1 font-medium text-gray-900">About this activity code</p>
+                          <p className="whitespace-pre-line">{selectedActivityCode.description}</p>
+                        </div>
+                      )}
+                    <div className="mb-4">
+                      {isLoadingActivities ? (
+                        <div className="flex items-center gap-2 py-2 text-sm text-gray-500">
+                          <LoaderEllipsis size={24} color="#9ca3af" />
+                          <span>Loading activities...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <Autocomplete<ActivityAutocompleteItem>
+                            key={activityCode}
+                            id="activity_url_autocomplete"
+                            placeholder="Search or enter an activity URL"
+                            inputSize="sm"
+                            items={autocompleteItems}
+                            value={inputValue}
+                            onValueChange={handleAutocompleteValueChange}
+                            error={activityUrlError != null && activityUrlError.length > 0}
+                            errorText={activityUrlError}
+                            helpText={activityUrlHelpText}
+                          >
+                            {(activity: ActivityAutocompleteItem) => (
+                              <AutocompleteItem key={activity.id} value={activity.url}>
+                                {activity.isPrefixSuggestion
+                                  ? `${activity.name}: ${activity.url}`
+                                  : activity.name
+                                    ? `${activity.name} (${activity.url})`
+                                    : activity.url}
+                              </AutocompleteItem>
+                            )}
+                          </Autocomplete>
+                          {isNewUrl && (
+                            <div className="mt-2 flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                              <span className="mt-0.5 shrink-0 text-base leading-none">*</span>
+                              <span>
+                                This URL is new and will be registered as a valid activity for this
+                                activity code if you proceed.
+                              </span>
+                            </div>
                           )}
-                        </Autocomplete>
-                        {isNewUrl && (
-                          <div className="mt-2 flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                            <span className="mt-0.5 shrink-0 text-base leading-none">*</span>
-                            <span>
-                              This URL is new and will be registered as a valid activity for this
-                              activity code if you proceed.
-                            </span>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
+                        </>
+                      )}
+                    </div>
+                  </>
                 )}
               </>
             ) : (

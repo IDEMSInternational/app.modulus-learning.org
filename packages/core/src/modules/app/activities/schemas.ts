@@ -13,10 +13,11 @@ import type { ActivityCodeRecord, ActivityRecord } from './repository/index.js'
 
 export const activityCodeSchema = z.strictObject({
   id: z.uuid(),
-  user_id: z.uuid(),
+  created_by: z.uuid().nullable(),
   code: z.string(),
   private_code: z.string(),
   url_prefix: z.string().nullable(),
+  description: z.string().nullable(),
   created_at: z.iso.datetime(),
   updated_at: z.iso.datetime(),
 })
@@ -25,23 +26,51 @@ export type ActivityCode = z.infer<typeof activityCodeSchema>
 
 export const toActivityCode = ({
   id,
-  user_id,
+  created_by,
   code,
   private_code,
   url_prefix,
+  description,
   created_at,
   updated_at,
 }: ActivityCodeRecord): ActivityCode => {
   return {
     id,
-    user_id,
+    created_by,
     code,
     private_code,
     url_prefix,
+    description,
     created_at: created_at.toISOString(),
     updated_at: updated_at.toISOString(),
   }
 }
+
+// ----------------------------------------------
+//  ActivityCodeMember
+// ----------------------------------------------
+
+export const activityCodeMemberSchema = z.strictObject({
+  activity_code_id: z.uuid(),
+  user_id: z.uuid(),
+  full_name: z.string().nullable(),
+  email: z.string().nullable(),
+  created_at: z.iso.datetime(),
+})
+
+export type ActivityCodeMember = z.infer<typeof activityCodeMemberSchema>
+
+// ----------------------------------------------
+//  InstructorSearchResult
+// ----------------------------------------------
+
+export const instructorSearchResultSchema = z.strictObject({
+  user_id: z.uuid(),
+  full_name: z.string().nullable(),
+  email: z.string().nullable(),
+})
+
+export type InstructorSearchResult = z.infer<typeof instructorSearchResultSchema>
 
 // ----------------------------------------------
 //  Activity
@@ -182,6 +211,7 @@ export const createActivityCodeRequestSchema = z.strictObject({
     .max(60, 'activity_code must be a string with a maximum of 200 characters')
     .regex(/^[a-zA-Z0-9-]+$/, 'activity_code must be alphanumeric with dashes'),
   url_prefix: z.string().max(255).nullable().optional(),
+  description: z.string().max(1024).nullable().optional(),
 
   // TODO: enforce more rules here, like starting with https?
   urls: z.url().array(),
@@ -196,6 +226,7 @@ export type CreateActivityCodeRequest = z.infer<typeof createActivityCodeRequest
 export const updateActivityCodeRequestSchema = z.strictObject({
   id: z.uuid(),
   url_prefix: z.string().max(255).nullable().optional(),
+  description: z.string().max(1024).nullable().optional(),
 
   // TODO: enforce more rules here, like starting with https?
   urls: z.url().array(),
@@ -242,3 +273,29 @@ export const startActivityRequestSchema = z.object({
 })
 
 export type StartActivityRequest = z.infer<typeof startActivityRequestSchema>
+
+// ----------------------------------------------
+//  Membership requests
+// ----------------------------------------------
+
+export const addActivityCodeMemberRequestSchema = z.strictObject({
+  activity_code_id: z.uuid(),
+  user_id: z.uuid(),
+})
+
+export type AddActivityCodeMemberRequest = z.infer<typeof addActivityCodeMemberRequestSchema>
+
+export const removeActivityCodeMemberRequestSchema = z.strictObject({
+  activity_code_id: z.uuid(),
+  user_id: z.uuid(),
+})
+
+export type RemoveActivityCodeMemberRequest = z.infer<typeof removeActivityCodeMemberRequestSchema>
+
+export const searchInstructorsRequestSchema = z.strictObject({
+  activity_code_id: z.uuid(),
+  query: z.string().max(128).default(''),
+  limit: z.coerce.number().int().min(1).max(50).optional().default(20),
+})
+
+export type SearchInstructorsRequest = z.infer<typeof searchInstructorsRequestSchema>

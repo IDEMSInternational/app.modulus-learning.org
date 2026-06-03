@@ -3,7 +3,7 @@
 import type { ChangeEvent } from 'react'
 import { startTransition, useActionState, useId, useState } from 'react'
 
-import { Button, ErrorText, Input, TextArea } from '@infonomic/uikit/react'
+import { Button, ErrorText, Input, Tabs, TextArea } from '@infonomic/uikit/react'
 
 import { LangLink } from '@/i18n/components/lang-link'
 import { validateUrlPrefix, validateUrls } from '../@types/validate-urls'
@@ -32,6 +32,7 @@ export function UpdateActivityCodeForm({
 
   const [formState, formAction, isPending] = useActionState(updateActivityCode, initialState)
   const [urlPrefix, setUrlPrefix] = useState(initialUrlPrefix)
+  const [description, setDescription] = useState(activityCode.description ?? '')
   const [urlsValue, setUrlsValue] = useState(initialUrlsValue)
   const [urlError, setUrlError] = useState(!initialUrlValidation.valid)
   const [urlPrefixError, setUrlPrefixError] = useState(!initialUrlPrefixValidation.valid)
@@ -39,6 +40,7 @@ export function UpdateActivityCodeForm({
   const [urlPrefixErrorText, setUrlPrefixErrorText] = useState(initialUrlPrefixValidation.message)
   const inputId = useId()
   const textAreaId = useId()
+  const descriptionId = useId()
   const errorTextId = useId()
 
   const validateFormFields = (nextUrls: string, nextUrlPrefix: string): boolean => {
@@ -106,7 +108,7 @@ export function UpdateActivityCodeForm({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-4 pt-2">
       {formState.status === 'failed' && (
         <ErrorText
           id={errorTextId}
@@ -116,6 +118,20 @@ export function UpdateActivityCodeForm({
       )}
       <form onSubmit={handleOnSubmit}>
         <input type="hidden" name="id" value={activityCode.id} />
+        <div className="mt-2">
+          <Input
+            id={descriptionId}
+            name="description"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            // rows={3}
+            maxLength={1024}
+            label="Description"
+            placeholder="Briefly describe why this activity code was created and how it's being used."
+            className="w-full"
+            helpText="Optional. A short description to help you and other instructors understand the purpose of this activity code and its associated activities."
+          />
+        </div>
         <div className="mt-2">
           <Input
             id={inputId}
@@ -138,9 +154,9 @@ export function UpdateActivityCodeForm({
             name="urls"
             rows={10}
             label="Activity URLs"
-            placeholder="Enter one or more destination activity URLs for this activity code."
+            placeholder="Enter one or more destination activity URLs for this activity code (line separated)."
             className="w-full"
-            helpText="Enter one or more destination activity URLs for this activity code. If a required URL prefix is set above, every URL must begin with it."
+            helpText="Optional. Enter destination activity URLs (line separated) for this activity code. Activities can be added or removed at any time. If a URL prefix is set above, every URL must begin with the URL prefix."
             error={urlError}
             errorText={urlErrorText}
           />

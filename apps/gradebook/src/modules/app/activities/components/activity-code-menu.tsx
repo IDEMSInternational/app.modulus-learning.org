@@ -36,6 +36,11 @@ export function ActivityCodeMenu({
               Update Activity Code
             </Button>
           </div>
+          {activityCode?.description && (
+            <div>
+              <p> {activityCode?.description}</p>
+            </div>
+          )}
         </div>
       </Container>
 
