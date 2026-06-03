@@ -7,7 +7,6 @@ import cx from 'classnames'
 
 import { ProgressBar } from '@/context/progress-bar-provider'
 import { useTranslations } from '@/i18n/client'
-import { LanguageMenu } from '@/i18n/components/language-menu'
 import { useUserSession } from '@/modules/app/session/provider'
 import { ThemeSwitch } from '@/ui/theme/theme-switch'
 import { UserMenu } from '../user-menu'
@@ -76,7 +75,7 @@ export const AppBarFront = forwardRef<Ref, AppBarProps>(function AppBar(
   const appBarBackground =
     hasScrolled || pathName.length > 3 ? 'bg-white dark:bg-primary-900' : 'bg-transparent'
 
-  const appBarTextColor =
+  const _appBarTextColor =
     hasScrolled || pathName.length > 3
       ? 'text-black fill-black dark:text-white dark:fill-white'
       : 'text-black fill-black dark:text-white dark:fill-white'

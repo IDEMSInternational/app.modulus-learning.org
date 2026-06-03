@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import cx from 'classnames'
 
 import { ProgressBar } from '@/context/progress-bar-provider'
-import { LanguageMenu } from '@/i18n/components/language-menu'
 import { ThemeSwitch } from '@/ui/theme/theme-switch'
 import { UserMenu } from '../user-menu'
 import { Branding } from './branding'
@@ -71,7 +70,7 @@ export const AppBarInside = forwardRef<Ref, AppBarProps>(function AppBar(
   const appBarBackground =
     hasScrolled || pathName.length > 3 ? 'bg-white shadow dark:bg-primary-900' : 'bg-transparent'
 
-  const appBarTextColor =
+  const _appBarTextColor =
     hasScrolled || pathName.length > 3
       ? 'text-black fill-black dark:text-white dark:fill-white'
       : 'text-white fill-white'
